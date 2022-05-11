@@ -1,8 +1,9 @@
 import numpy as np
 import skfuzzy as fuzzy
+import matplotlib.pyplot as plt
 
 from skfuzzy import control
-import matplotlib.pyplot as plt
+from meteocalc import heat_index as calc_heat_index, Temp
 
 heat_index = control.Antecedent(np.arange(0, 71, 1), 'IC')
 heat_index['frio'] = fuzzy.trapmf(heat_index.universe, [0, 0, 10, 21])
@@ -94,7 +95,7 @@ air_control = control.ControlSystem([
 simulator = control.ControlSystemSimulation(air_control)
 
 simulator.input['Temperatura interna'] = 23
-simulator.input['IC'] = 32
+simulator.input['IC'] = calc_heat_index(temperature=Temp(32, 'c'), humidity=41).c
 
 simulator.compute()
 
